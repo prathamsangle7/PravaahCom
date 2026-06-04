@@ -1,11 +1,8 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Announcement
 
 
-@login_required
 def announcement_list(request):
     user_role = getattr(request.user, 'role', 'student')
     ann = Announcement.objects.filter(is_active=True).filter(
@@ -14,7 +11,6 @@ def announcement_list(request):
     return render(request, 'announcements/list.html', {'announcements': ann})
 
 
-@staff_member_required
 def create_announcement(request):
     if request.method == 'POST':
         Announcement.objects.create(
@@ -22,7 +18,7 @@ def create_announcement(request):
             message=request.POST['message'],
             target_audience=request.POST['target_audience'],
             priority=request.POST.get('priority', 'medium'),
-            created_by=request.user
+            created_by=request.user if getattr(request, 'user', None) and request.user.is_authenticated else None
         )
         return redirect('announcement_list')
     return render(request, 'announcements/create.html')
