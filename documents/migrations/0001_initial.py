@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
                 ('file_type', models.CharField(blank=True, max_length=50)),
-                ('file', models.FileField(upload_to='documents/')),
+                ('file_url', models.FileField(upload_to='documents/')),
                 ('file_size_kb', models.IntegerField(blank=True, null=True)),
                 ('related_module', models.CharField(blank=True, max_length=50, null=True)),
                 ('related_id', models.IntegerField(blank=True, null=True)),

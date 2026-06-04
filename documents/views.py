@@ -7,6 +7,11 @@ from .forms import DocumentUploadForm
 
 
 @login_required
+def home(request):
+    return redirect('document_list')
+
+
+@login_required
 def upload_document(request):
     form = DocumentUploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
