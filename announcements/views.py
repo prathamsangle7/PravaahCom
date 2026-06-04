@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -13,7 +14,7 @@ def announcement_list(request):
     return render(request, 'announcements/list.html', {'announcements': ann})
 
 
-@login_required
+@staff_member_required
 def create_announcement(request):
     if request.method == 'POST':
         Announcement.objects.create(
