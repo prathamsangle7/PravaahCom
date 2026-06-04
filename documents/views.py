@@ -3,10 +3,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import FileResponse
 from .models import Document
 from .forms import DocumentUploadForm
+from django.urls import reverse
 
 
 def home(request):
-    return redirect('document_list')
+    return render(request, 'home.html')
 
 
 def upload_document(request):
@@ -17,7 +18,7 @@ def upload_document(request):
         doc.file_type    = os.path.splitext(str(doc.file_url))[1].lstrip('.')
         doc.file_size_kb = request.FILES['file_url'].size // 1024
         doc.save()
-        return redirect('document_list')
+        return redirect('documents:document_list')
     return render(request, 'documents/upload.html', {'form': form})
 
 
@@ -31,7 +32,19 @@ def download_document(request, doc_id):
 
 def document_list(request):
     qs = Document.objects.all()
-    if request.GET.get('module'): qs = qs.filter(related_module=request.GET['module'])
-    if request.GET.get('type'):   qs = qs.filter(file_type=request.GET['type'])
-    if request.GET.get('q'):      qs = qs.filter(title__icontains=request.GET['q'])
-    return render(request, 'documents/list.html', {'documents': qs})
+    selected_module = request.GET.get('related_module') or ''
+    if selected_module:
+        qs = qs.filter(related_module=selected_module)
+    if request.GET.get('type'):
+        qs = qs.filter(file_type=request.GET['type'])
+    if request.GET.get('q'):
+        qs = qs.filter(title__icontains=request.GET['q'])
+
+    modules = list(Document.objects.order_by('related_module').values_list('related_module', flat=True).distinct())
+    modules = [m for m in modules if m]
+
+    return render(request, 'documents/list.html', {
+        'documents': qs,
+        'modules': modules,
+        'selected_module': selected_module,
+    })

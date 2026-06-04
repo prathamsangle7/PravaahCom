@@ -1,156 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documents</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .filter-section {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .filter-section label {
-            font-weight: bold;
-            color: #555;
-        }
-        .filter-section select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .filter-section button {
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .filter-section button:hover {
-            background-color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table thead {
-            background-color: #f8f9fa;
-        }
-        table th {
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-            color: #333;
-            border-bottom: 2px solid #ddd;
-        }
-        table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-        table tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-        .download-link {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #495057;
-        }
-        .empty-message {
-            text-align: center;
-            color: #999;
-            padding: 40px;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Documents</h1>
-        
-        <div class="filter-section">
-            <label for="moduleFilter">Filter by Module:</label>
-            <form method="get" style="display: flex; gap: 10px;">
-                <select name="related_module" id="moduleFilter">
-                    <option value="">All Modules</option>
-                    {% for module in modules %}
-                        <option value="{{ module }}" {% if module == selected_module %}selected{% endif %}>
-                            {{ module }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Filter</button>
-            </form>
-        </div>
+{% extends 'base.html' %}
 
-        {% if documents %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>File Type</th>
-                        <th>Module</th>
-                        <th>Size (KB)</th>
-                        <th>Downloads</th>
-                        <th>Uploaded By</th>
-                        <th>Uploaded At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for doc in documents %}
-                        <tr>
-                            <td>{{ doc.title }}</td>
-                            <td><span class="badge">{{ doc.file_type|upper }}</span></td>
-                            <td>{{ doc.related_module|default:"—" }}</td>
-                            <td>{{ doc.file_size_kb|default:"—" }}</td>
-                            <td>{{ doc.download_count }}</td>
-                            <td>{{ doc.uploaded_by.username|default:"—" }}</td>
-                            <td>{{ doc.uploaded_at|date:"M d, Y H:i" }}</td>
-                            <td>
-                                <a href="{% url 'download_document' doc.id %}" class="download-link">Download</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="empty-message">
-                No documents found.
-            </div>
-        {% endif %}
+{% block title %}Documents - PRAVAAH{% endblock %}
+
+{% block extra_css %}
+<style>
+  .documents-panel { background:#fff; border-radius:16px; box-shadow:0 16px 40px rgba(0,0,0,0.08); padding:2rem; }
+  .documents-panel h1 { margin-bottom:1.25rem; }
+  .filter-row { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-bottom:1.5rem; }
+  .filter-row label { font-weight:700; min-width:130px; }
+  .table thead th { border-bottom:2px solid #e7e7e7; }
+  .empty-message { text-align:center; color:#666; padding:4rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="documents-panel">
+  <h1>Documents</h1>
+  <form method="get" class="filter-row">
+    <label for="moduleFilter">Filter by Module:</label>
+    <select id="moduleFilter" name="related_module" class="form-select" style="max-width:280px;">
+      <option value="">All Modules</option>
+      {% for module in modules %}
+        <option value="{{ module }}" {% if module == selected_module %}selected{% endif %}>{{ module }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+
+  {% if documents %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Module</th>
+            <th>Size</th>
+            <th>Downloads</th>
+            <th>Uploaded By</th>
+            <th>Uploaded At</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in documents %}
+            <tr>
+              <td>{{ doc.title }}</td>
+              <td>{{ doc.file_type|upper }}</td>
+              <td>{{ doc.related_module|default:'—' }}</td>
+              <td>{{ doc.file_size_kb|default:'—' }}</td>
+              <td>{{ doc.download_count }}</td>
+              <td>{{ doc.uploaded_by.username|default:'—' }}</td>
+              <td>{{ doc.uploaded_at|date:'M d, Y H:i' }}</td>
+              <td><a href="{% url 'documents:download_document' doc.id %}" class="btn btn-outline-primary btn-sm">Download</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-</body>
-</html>
+  {% else %}
+    <div class="empty-message">No documents found.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,4 +1,38 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block title %}Announcements - PRAVAAH{% endblock %}
+
+{% block extra_css %}
+<style>
+  .announcements-panel { background:#fff; border-radius:16px; box-shadow:0 16px 40px rgba(0,0,0,0.08); padding:2rem; }
+  .announcement { background:#fafafa; border-radius:12px; padding:1.5rem; margin-bottom:1rem; }
+  .announcement h2 { margin-bottom:0.5rem; }
+  .announcement-meta { color:#666; font-size:0.95rem; }
+  .empty-message { text-align:center; color:#666; padding:3rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="announcements-panel">
+  <h1>Announcements</h1>
+
+  {% if announcements %}
+    {% for announcement in announcements %}
+      <article class="announcement">
+        <div class="d-flex justify-content-between flex-wrap gap-3 mb-3">
+          <div>
+            <h2>{{ announcement.title }}</h2>
+            <div class="announcement-meta">
+              {{ announcement.created_at|date:'M d, Y H:i' }} &middot; {{ announcement.get_target_audience_display }} &middot; Priority {{ announcement.priority|capfirst }}
+            </div>
+          </div>
+          <span class="badge bg-secondary">{{ announcement.is_active|yesno:'Active,Inactive' }}</span>
+        </div>
+        <p>{{ announcement.message|linebreaksbr }}</p>
+      </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty-message">No announcements found.</div>
+  {% endif %}
+</div>
 {% endblock %}
