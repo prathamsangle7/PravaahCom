@@ -36,6 +36,11 @@ INSTALLED_APPS = [
 
     # project apps
     'apps.accounts.apps.AccountsConfig',
+
+        # root level apps
+        'announcements',
+        'documents',
+
     'apps.students',
     'apps.trainers',
     'apps.programs',
@@ -50,11 +55,11 @@ INSTALLED_APPS = [
     'apps.allocations',
     'apps.finance',
     'apps.notifications',
-    'apps.documents',
     'apps.audit',
     'apps.reports',
     'apps.dashboard',
     'apps.api',
+    'apps.calendar_module.apps.CalendarModuleConfig',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +160,9 @@ DEFAULT_FROM_EMAIL  = EMAIL_HOST_USER
 
 # Crispy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+load_dotenv()
+
+
+
