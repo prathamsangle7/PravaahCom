@@ -1,11 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_css %}
+<style>
+  .topbar, .sidebar, .p-footer { display: none !important; }
+  .page-wrap { margin: 0; min-height: 100vh; }
+  .page-body { padding: 0; display: grid; place-items: center; }
+  .login-card {
+    width: min(100%, 480px);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.08);
+    padding: 2.5rem 2rem;
+    margin: 2rem;
+  }
+  .login-card h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+  }
+  .login-card form {
+    display: grid;
+    gap: 1rem;
+  }
+  .login-card form input {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: #fff;
+  }
+  .login-card form button {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: none;
+    border-radius: 12px;
+    background: var(--orange);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .login-card form button:hover {
+    background: #d94400;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-card">
   <h2>Login</h2>
   <form method="post">
     {% csrf_token %}
@@ -15,5 +61,5 @@
     {% endif %}
     <button type="submit">Login</button>
   </form>
-</body>
-</html>
+</div>
+{% endblock %}

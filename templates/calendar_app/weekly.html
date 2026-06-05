@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load calendar_tags %}
+
+{% block title %}Calendar - Weekly View{% endblock %}
+
+{% block extra_css %}
+<style>
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+  .day-panel { border: 2px solid #000; background: #fff; padding: 16px; min-height: 260px; }
+  .day-title { font-weight: 800; margin-bottom: 10px; }
+  .event-item { border-radius: 10px; padding: 10px; margin-bottom: 10px; color: #fff; }
+  .event-item.session { background: #1A73E8; }
+  .event-item.exam { background: #F4A300; }
+  .event-item.holiday { background: #9E9E9E; }
+  .event-item.hostel { background: #2ECC71; }
+  .event-item.unavail { background: #E53935; }
+  .week-nav { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 1.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pg-header">
+  <div>
+    <div class="pg-title">Weekly Calendar</div>
+    <div class="pg-sub">Week of {{ selected|date:'M d, Y' }}</div>
+  </div>
+  <div class="week-nav">
+    <a href="{% url 'monthly_view' %}?year={{ prev_week.year }}&month={{ prev_week.month }}" class="btn-p-outline">Previous Week</a>
+    <a href="{% url 'monthly_view' %}?year={{ selected.year }}&month={{ selected.month }}" class="btn-p">Monthly view</a>
+    <a href="{% url 'monthly_view' %}?year={{ next_week.year }}&month={{ next_week.month }}" class="btn-p-outline">Next Week</a>
+  </div>
+</div>
+
+<div class="week-grid">
+  {% for day in week_days %}
+    <div class="day-panel">
+      <div class="day-title">{{ day|date:'D, M d' }}</div>
+      {% if events_by_date|get_item:day %}
+        {% for event in events_by_date|get_item:day %}
+          <div class="event-item {{ event.event_type }}">
+            <strong>{{ event.title }}</strong><br>
+            {{ event.start_datetime|time:'H:i' }} - {{ event.end_datetime|time:'H:i' }}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p style="color:#666;">No events scheduled.</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

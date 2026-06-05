@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+  .stats-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; }
+  .stat-card { min-height: 160px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pg-header">
+  <div>
+    <div class="pg-title">Activity Dashboard</div>
+    <div class="pg-sub">Live counts for your training environment.</div>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="sc-icon"><i class="fa-solid fa-user-graduate"></i></div>
+    <div class="sc-num">{{ counts.students }}</div>
+    <div class="sc-label">Students</div>
+  </div>
+  <div class="stat-card s-orange">
+    <div class="sc-icon"><i class="fa-solid fa-person-chalkboard"></i></div>
+    <div class="sc-num">{{ counts.trainers }}</div>
+    <div class="sc-label">Trainers</div>
+  </div>
+  <div class="stat-card s-black">
+    <div class="sc-icon"><i class="fa-solid fa-calendar-day"></i></div>
+    <div class="sc-num">{{ counts.sessions }}</div>
+    <div class="sc-label">Sessions</div>
+  </div>
+  <a href="{% url 'calendar_home' %}" class="stat-card" style="text-decoration:none; color:inherit;">
+    <div class="sc-icon"><i class="fa-solid fa-calendar-check"></i></div>
+    <div class="sc-num">{{ counts.calendar_events }}</div>
+    <div class="sc-label">Calendar Events</div>
+  </a>
+  <div class="stat-card s-orange">
+    <div class="sc-icon"><i class="fa-solid fa-user-clock"></i></div>
+    <div class="sc-num">{{ counts.trainer_unavailabilities }}</div>
+    <div class="sc-label">Trainer Unavailabilities</div>
+  </div>
+  <div class="stat-card s-black">
+    <div class="sc-icon"><i class="fa-solid fa-file-lines"></i></div>
+    <div class="sc-num">{{ counts.documents }}</div>
+    <div class="sc-label">Documents</div>
+  </div>
+</div>
+{% endblock %}

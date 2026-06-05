@@ -4,11 +4,22 @@
 
 {% block extra_css %}
 <style>
-  .announcements-panel { background:#fff; border-radius:16px; box-shadow:0 16px 40px rgba(0,0,0,0.08); padding:2rem; }
-  .announcement { background:#fafafa; border-radius:12px; padding:1.5rem; margin-bottom:1rem; }
-  .announcement h2 { margin-bottom:0.5rem; }
-  .announcement-meta { color:#666; font-size:0.95rem; }
-  .empty-message { text-align:center; color:#666; padding:3rem 0; }
+  .announcements-panel {
+    background: transparent;
+    border: 2px solid var(--black);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .announcement {
+    background: rgba(255,255,255,0.9);
+    border: 2px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .announcement h2 { margin-bottom: 0.5rem; }
+  .announcement-meta { color: #666; font-size: 0.95rem; }
+  .empty-message { text-align: center; color: #666; padding: 3rem 0; }
 </style>
 {% endblock %}
 

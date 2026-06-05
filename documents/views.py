@@ -1,6 +1,6 @@
 import os
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 from .models import Document
 from .forms import DocumentUploadForm
 from django.urls import reverse
@@ -24,6 +24,9 @@ def upload_document(request):
 
 def download_document(request, doc_id):
     doc = get_object_or_404(Document, id=doc_id)
+    if not doc.file_url or not doc.file_url.storage.exists(doc.file_url.name):
+        raise Http404('The requested file is not available on the server.')
+
     doc.download_count += 1
     doc.save()
     return FileResponse(doc.file_url.open('rb'), as_attachment=True,
